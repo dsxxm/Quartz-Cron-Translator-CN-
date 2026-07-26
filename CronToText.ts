@@ -222,7 +222,7 @@ export class CronTranslator implements FieldVisitor {
 		}
 	}
 	visitRange(field: RangeField, type: Type): string {
-		return `${field.start.accept(this, type)}到${field.end.accept(this, type)}`;
+		return `${field.start.accept(this, type)}到${field.end.accept(this, type)},`;
 	}
 	visitStep(field: StepField, type: Type): string {
 		if (field.base instanceof AtomField && field.base.value === "*")
