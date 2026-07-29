@@ -222,18 +222,25 @@ export class CronTranslator implements FieldVisitor {
 		}
 	}
 	visitRange(field: RangeField, type: Type): string {
-		return `${field.start.accept(this, type)}到${field.end.accept(this, type)},`;
+		return `${field.start.accept(this, type)}到${field.end.accept(this, type)} `;
 	}
 	visitStep(field: StepField, type: Type): string {
-		if (field.base instanceof AtomField && field.base.value === "*")
-			return `每${field.step}${TRANS[type]}`;
-		return `从${field.base.accept(this, type)}每隔${field.step}${TRANS[type]}`;
+		if (field.base instanceof AtomField) {
+			if (field.base.value === "*")
+				return `每${field.step}${TRANS[type]}`;
+			else
+				return `从${field.base.accept(this, type)}起每隔${field.step}${TRANS[type]}`
+		}
+		else
+			return `从${field.base.accept(this, type)}每隔${field.step}${TRANS[type]}`;
 	}
 	visitList(field: ListField, type: Type): string {
 		let result: string = field.items[0].accept(this, type);
 		for (let i: number = 1; i < field.items.length; i++) {
 			result = result + ";" + field.items[i].accept(this, type);
 		}
+		result = result.replace(/\s/g, "");
+		result = " " + result + " ";
 		return result;
 	}
 
